@@ -7,8 +7,8 @@ export async function getPage(
   const pages = await browser.pages();
 
   for (const page of pages) {
-    const url = page.url();
-    if (url.indexOf(hostname) != -1) {
+    const url = new URL(page.url());
+    if (url.hostname === hostname) {
       return page;
     }
   }
