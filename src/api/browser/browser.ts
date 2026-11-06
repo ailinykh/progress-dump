@@ -28,8 +28,6 @@ export async function createBrowserWithStealth(): Promise<Browser> {
       `--user-data-dir=${resolve(".puppeteer")}`,
       "--no-first-run",
       "--no-default-browser-check",
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
     ],
     {
       detached: true,
