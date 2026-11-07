@@ -2,7 +2,9 @@ import { Page } from "puppeteer";
 
 export async function safeClick(page: Page, selector: string): Promise<void> {
   // 1. Locate the button and get its exact physical coordinates
-  const button = await page.waitForSelector(selector);
+  const button = await page.waitForSelector(selector, { visible: true });
+  if (!button) throw new Error(`Element ${selector} not found`);
+  await button.scrollIntoView();
   const box = await button.boundingBox();
 
   if (!box) throw `Element ${selector} not found`;
