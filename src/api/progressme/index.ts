@@ -8,10 +8,13 @@ export async function handleLogin(
     selector,
     email,
     password,
-  }: { target: string; selector: string; email: string; password: string },
+  }: {
+    target: string;
+    selector: string;
+    email: string | undefined;
+    password: string | undefined;
+  },
 ) {
-  if (!email || !password) throw "Credentials missing";
-
   await page.goto(target, {
     waitUntil: "networkidle0",
     timeout: 30_000,
@@ -28,6 +31,10 @@ export async function handleLogin(
       .$eval(login_button, (el) => el.checkVisibility())
       .catch(() => false)
   ) {
+    if (!email || !password) {
+      throw new Error("Credentials required: session is not authenticated");
+    }
+
     console.info("🔑 perform authorization flow");
     await safeType(page, 'input[type="email"]', email);
     await safeType(page, 'input[type="password"]', password);
