@@ -39,21 +39,13 @@ export async function handleLogin(
     await safeType(page, 'input[type="email"]', email);
     await safeType(page, 'input[type="password"]', password);
 
-    // combine to avoid race condition
-    await Promise.all([
-      page.waitForSelector(".avatar-box", {
-        visible: true,
-        timeout: 30_000,
-      }),
-      safeClick(page, login_button),
-    ]);
-
-    await page.goto(target, { waitUntil: "domcontentloaded" });
-    // expect avatar for logged in user
+    await safeClick(page, login_button);
     await page.waitForSelector(".avatar-box", {
       visible: true,
       timeout: 30_000,
     });
+
+    await page.goto(target, { waitUntil: "domcontentloaded" });
     console.info("✅ authorization completed successfully");
   }
 
