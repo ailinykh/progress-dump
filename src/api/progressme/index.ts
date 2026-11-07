@@ -34,7 +34,10 @@ export async function handleLogin(
 
     // combine to avoid race condition
     await Promise.all([
-      page.waitForNavigation(),
+      page.waitForSelector(".avatar-box", {
+        visible: true,
+        timeout: 30_000,
+      }),
       safeClick(page, login_button),
     ]);
 
