@@ -1,4 +1,10 @@
-import { createBrowserWithStealth } from "./browser";
-import { getPage } from "./page";
+import { createBrowserWithStealth, getPage, resizeBrowser } from "./browser";
+import { safeClick, safeType } from "./page";
 
-export { createBrowserWithStealth, getPage };
+export {
+  createBrowserWithStealth,
+  getPage,
+  resizeBrowser,
+  safeClick,
+  safeType,
+};

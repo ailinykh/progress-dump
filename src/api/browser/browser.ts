@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { Browser } from "puppeteer";
+import { Browser, CDPSession, Page } from "puppeteer";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
@@ -53,4 +53,39 @@ export async function createBrowserWithStealth(): Promise<Browser> {
       await delay(250);
     }
   }
+}
+
+export async function resizeBrowser(
+  session: CDPSession,
+  { width, height }: { width: number; height: number },
+) {
+  const { windowId } = await session.send("Browser.getWindowForTarget");
+
+  await session.send("Browser.setWindowBounds", {
+    windowId,
+    bounds: { windowState: "normal" },
+  });
+
+  await session.send("Browser.setWindowBounds", {
+    windowId,
+    bounds: { width, height },
+  });
+
+  await session.detach();
+}
+
+export async function getPage(
+  browser: Browser,
+  hostname: string,
+): Promise<Page> {
+  const pages = await browser.pages();
+
+  for (const page of pages) {
+    const url = new URL(page.url());
+    if (url.hostname === hostname) {
+      return page;
+    }
+  }
+
+  return await browser.newPage();
 }
