@@ -32,7 +32,9 @@ export async function safeType(
   await new Promise((r) => setTimeout(r, 500 + Math.random() * 3000));
 
   // 1. Safely click to focus the input field first (using human-like click math)
-  const input = await page.waitForSelector(selector);
+  const input = await page.waitForSelector(selector, { visible: true });
+  if (!input) throw new Error(`Element ${selector} not found`);
+  await input.scrollIntoView();
   const box = await input.boundingBox();
 
   if (!box) throw `Element ${selector} not found`;
